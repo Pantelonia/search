@@ -94,68 +94,71 @@ def depthFirstSearch(problem):
     print "second successors:", problem.getSuccessors(firstChild[0])
     """
     "*** YOUR CODE HERE ***"
-    "Initiate primary variables"
+    #Initiate primary variables
     stack = util.Stack()
     current_position = problem.getStartState()
     visited = []
     route = []
     stack.push((current_position, route))
 
-    while not stack.isEmpty() and not problem.isGoalState(current_position):
-        state, actions = stack.pop()
-        visited.append(state)
-        children = problem.getSuccessors(state)
-        for child in children:
+    while not stack.isEmpty() and not problem.isGoalState(current_position): # check if the stack is empty or if it is already in the final position
+        state, actions = stack.pop()    # take the last element of the stack as state and action
+        visited.append(state)           # add the last state to the list of the visited ones
+        children = problem.getSuccessors(state)     # get the succesors of the actual state and store them
+        for child in children:          # store the coordinates and check if they have already been visited
             coordinates = child[0]
             if not coordinates in visited:
                 current_position = coordinates
                 direction = child[1]
-                stack.push((coordinates, actions + [direction]))
+                stack.push((coordinates, actions + [direction]))    # we add on the stack the coordinates and the direction of the last action
     return actions + [direction]
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    #Initiate primary variables
     queue = util.Queue()
     current_position = problem.getStartState()
     visited = []
     visited.append(current_position)
     queue.push((current_position, []))
+    
     while not queue.isEmpty():
-        state, action = queue.pop()
-        if problem.isGoalState(state):
+        state, action = queue.pop()         # take the last element of the queue as state and action
             return action
         children = problem.getSuccessors(state)
         for child in children:
             coordinates = child[0]
             if not coordinates in visited:
                 direction = child[1]
-                visited.append(coordinates)
-                queue.push((coordinates, action + [direction]))
+                visited.append(coordinates)         # add to the list of visited the new coordinates
+                queue.push((coordinates, action + [direction])) #we add on the queue the coordinates and the direction of the last action
     return action
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    #Initiate primary variables
     current_position = problem.getStartState()
     visited = []
     queue = util.PriorityQueue()
     queue.push((current_position, []) ,0)
+    
     while not queue.isEmpty():
         state, actions = queue.pop()
-        if problem.isGoalState(state):
+        if problem.isGoalState(state):  # return the last element of the queue if we are on the goal state
             return actions
-        if state not in visited:
+        if state not in visited:            # if we have not visited the state we will get its successors checking if we have visited them
             successors = problem.getSuccessors(state)
             for i in successors:
                 coordinates = i[0]
                 if coordinates not in visited:
                     direction = i[1]
                     actCost = actions + [direction]
-                    queue.push((coordinates, actions + [direction]), problem.getCostOfActions(actCost))
-        visited.append(state)
+                    queue.push((coordinates, actions + [direction]), problem.getCostOfActions(actCost)) # we add on the queue the coordinates and the direction of the last action with its cost
+        visited.append(state)  
     return actions
     util.raiseNotDefined()
 
