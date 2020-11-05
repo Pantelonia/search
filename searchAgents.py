@@ -313,6 +313,7 @@ class CornersProblem(search.SearchProblem):
             hitsWall = self.walls[nextx][nexty]
             newCorners = ()
             nextState = (nextx, nexty)
+            #check that updated position is any one of the corner
             if not hitsWall:
                 if nextState in self.corners:
                     if nextState == (self.right, 1):
@@ -325,7 +326,7 @@ class CornersProblem(search.SearchProblem):
                         newCorners = [holdCorners[0], holdCorners[1], holdCorners[2], True]
                     successor = ((nextState, newCorners), action,  1)
                 else:
-                    successor = ((nextState, holdCorners), action, 1)
+                    successor = ((nextState, holdCorners), action, 1)                    
                 successors.append(successor)
 
         self._expanded += 1
@@ -379,19 +380,20 @@ def cornersHeuristic(state, problem):
                 cornerNot.append(c)
 
     cost = 0
-    currPosition = position
     while len(cornerNot) > 0:
         distArr= []
         x = 0
+        #find cost and associated corners
         for c in range(0, len(cornerNot)):
             corner = cornerNot[c]
             x = x + 1
-            dist = util.manhattanDistance(currPosition, corner)
+            dist = util.manhattanDistance(position, corner)
             distArr.append(dist)
+        #find the minimum and add to heuristic
         minDist = min(distArr)
         cost += minDist
         minDistI= distArr.index(minDist)
-        currPosition = cornerNot[minDistI]
+        position = cornerNot[minDistI]
         del cornerNot[minDistI]
 
     return cost
