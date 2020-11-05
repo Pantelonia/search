@@ -126,6 +126,7 @@ def breadthFirstSearch(problem):
     
     while not queue.isEmpty():
         state, action = queue.pop()         # take the last element of the queue as state and action
+        if problem.isGoalState(state):
             return action
         children = problem.getSuccessors(state)
         for child in children:
